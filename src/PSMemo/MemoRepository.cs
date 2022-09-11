@@ -13,13 +13,20 @@ public class MemoFileRepository
         this.root = root;
     }
 
-    public IEnumerable<string> Get(string key)
+    public IEnumerable<string> GetAll(string key)
     {
-        string path = ConvertKeyToPath(key);
+        string path = ConvertKeyToMemoFilePath(key);
 
         string[] lines = File.ReadAllLines(path);
 
         return lines.Where(line => line.Trim() != String.Empty);
+    }
+
+    public void UpdateAll(string key, IEnumerable<string> values)
+    {
+        string path = ConvertKeyToMemoFilePath(key);
+
+        File.WriteAllLines(path, values);
     }
 
     public void Add(string key, string value)
@@ -30,5 +37,12 @@ public class MemoFileRepository
     public void Remove(string key, string value)
     {
 
+    }
+
+    public string ConvertKeyToMemoFilePath(string key)
+    {
+        string childPath = ConvertKeyToPath(key);
+        string path = Path.Join(root, childPath);
+        return $"{path}.{PSMemoFileExtension}";
     }
 }

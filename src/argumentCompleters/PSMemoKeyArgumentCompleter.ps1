@@ -6,7 +6,7 @@ using namespace System.Management.Automation.Language
 
 class PSMemoKeyCompleterAttribute : System.Management.Automation.ArgumentCompleterAttribute {
 
-    [string]$Root
+    [string]$Root = $null
 
     PSMemoKeyCompleterAttribute() : base([PSMemoKeyCompleterAttribute]::_createScriptBlock($this)) {}
 
@@ -14,13 +14,14 @@ class PSMemoKeyCompleterAttribute : System.Management.Automation.ArgumentComplet
         $scriptblock = {
             param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
 
-            $root = $instance.Root ?? (getPSMemoHome)
+            $instance.Root ??= (getPSMemoHome)
 
             $childPathToComplete = convertKeyToPath $wordToComplete
             $pathToComplete = Join-Path $root $childPathToComplete
 
             return Convert-Path "$pathToComplete*" | ForEach-Object {
-                $key = convertPathToKey $_.Replace($root, '')
+                $key = convertPathToKey $_.Replace($instance.Root, '')
+                $key = "$key."
                 return [CompletionResult]::new($key, $key, 'ParameterValue', $key)
             }
         }.GetNewClosure()

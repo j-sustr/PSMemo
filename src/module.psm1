@@ -1,6 +1,7 @@
 . $PSScriptRoot\utils\setMemoContent.ps1
 . $PSScriptRoot\utils\getPSMemoHome.ps1
 . $PSScriptRoot\utils\getMemoContent.ps1
+. $PSScriptRoot\utils\convertPathToKey.ps1
 . $PSScriptRoot\utils\convertKeyToPath.ps1
 . $PSScriptRoot\utils\convertKeyToPSMemoPath.ps1
 . $PSScriptRoot\argumentCompleters\PSMemoKeyArgumentCompleter.ps1

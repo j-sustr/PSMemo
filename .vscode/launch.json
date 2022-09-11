@@ -13,7 +13,7 @@
       "args": [
         "-NoExit",
         "-Command",
-        "Import-Module \"${workspaceFolder}/bin/Debug/net6.0/publish/PSMemo.dll\""
+        "Import-Module \"${workspaceFolder}/src/PSMemo/bin/Debug/net6.0/publish/PSMemo.dll\""
       ],
       "cwd": "${workspaceFolder}",
       "console": "externalTerminal",

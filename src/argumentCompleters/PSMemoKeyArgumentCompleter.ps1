@@ -14,16 +14,22 @@ class PSMemoKeyCompleterAttribute : System.Management.Automation.ArgumentComplet
         $scriptblock = {
             param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
 
-            $instance.Root ??= (getPSMemoHome)
+            # if ([string]::IsNullOrEmpty($instance.Root)) {
+            #     $instance.Root = Get-PSMemoHome
+            # }
 
-            $childPathToComplete = convertKeyToPath $wordToComplete
-            $pathToComplete = Join-Path $root $childPathToComplete
-
-            return Convert-Path "$pathToComplete*" | ForEach-Object {
-                $key = convertPathToKey $_.Replace($instance.Root, '')
-                $key = "$key."
-                return [CompletionResult]::new($key, $key, 'ParameterValue', $key)
+            return @('aaa', 'bbb') | ForEach-Object {
+                return [CompletionResult]::new($_, $_, 'ParameterValue', $_)
             }
+
+            # $childPathToComplete = convertKeyToPath $wordToComplete
+            # $pathToComplete = Join-Path $instance.Root $childPathToComplete
+
+            # return Convert-Path "$pathToComplete*" | ForEach-Object {
+            #     $key = convertPathToKey $_.Replace($instance.Root, '')
+            #     $key = "$key."
+            #     return [CompletionResult]::new($key, $key, 'ParameterValue', $key)
+            # }
         }.GetNewClosure()
         return $scriptblock
     }

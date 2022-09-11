@@ -8,16 +8,20 @@ class PSMemoKeyCompleterAttribute : System.Management.Automation.ArgumentComplet
 
     [string]$Root
 
-    PSMemoKeyCompleterAttribute() : base([PSMemoKeyCompleterAttribute]::_createScriptBlock($this)) {
-        $this.Root = getPSMemoHome
-    }
+    PSMemoKeyCompleterAttribute() : base([PSMemoKeyCompleterAttribute]::_createScriptBlock($this)) {}
 
     hidden static [ScriptBlock] _createScriptBlock([PSMemoKeyCompleterAttribute] $instance) {
         $scriptblock = {
             param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
 
-            return @('abc', 'xyz') | ForEach-Object {
-                return [CompletionResult]::new($_, $_, 'ParameterValue', $_)
+            $root = $instance.Root ?? (getPSMemoHome)
+
+            $childPathToComplete = convertKeyToPath $wordToComplete
+            $pathToComplete = Join-Path $root $childPathToComplete
+
+            return Convert-Path "$pathToComplete*" | ForEach-Object {
+                $key = convertPathToKey $_.Replace($root, '')
+                return [CompletionResult]::new($key, $key, 'ParameterValue', $key)
             }
         }.GetNewClosure()
         return $scriptblock

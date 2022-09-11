@@ -1,6 +1,5 @@
 
-
-function Add-Memo {
+function Remove-Memo {
     param (
         [Parameter(Mandatory, Position = 0)]
         [ValidateNotNullOrEmpty()]
@@ -13,12 +12,16 @@ function Add-Memo {
 
     $memoPath = convertKeyToPSMemoPath $Key
 
-    if (-not (Test-Path $memoPath)) {
-        Write-Verbose "Creating new memo file '$memoPath'"
-        New-Item -Path $memoPath -ItemType File -Force
+    if (!(Test-Path $memoPath)) {
+        throw "Memo '$memoPath' does not exist."
     }
 
     $memo = getMemoContent $memoPath
-    $memo[$Value] = $true;
-    setMemoContent $memoPath $memo
+
+    if ($memo.ContainsKey()) {
+        $memo[$Value].Remove($value)
+        setMemoContent $memoPath $memo
+    } else {
+        Write-Error "Memo '$memoPath' does not contain value '$value'."
+    }
 }

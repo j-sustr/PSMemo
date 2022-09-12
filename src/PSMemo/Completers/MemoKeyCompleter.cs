@@ -17,22 +17,23 @@ public class MemoKeyCompleter : IArgumentCompleter
         CommandAst commandAst,
         IDictionary fakeBoundParameters)
     {
-        string pattern = KeyUtils.ConvertKeyToPath(wordToComplete);
-        if (wordToComplete.EndsWith(KeyUtils.Separator))
+        string path = KeyUtils.ConvertKeyToPath(wordToComplete);
+        string pattern = "*";
+        if (!wordToComplete.EndsWith(KeyUtils.Separator))
         {
-            pattern = $"{pattern}{Path.DirectorySeparatorChar}*";
-        }
-        else
-        {
-            pattern = $"{pattern}*";
+            pattern = $"{Path.GetFileName(path)}*";
+            path = Path.GetDirectoryName(path) ?? "";
         }
 
-
-        Matcher matcher = new();
-        matcher.AddInclude(pattern);
-
-        return matcher.GetResultsInFullPath(Constants.PSMemoFolderPath).Select(path =>
+        var dir = new DirectoryInfo(Constants.PSMemoFolderPath);
+        if (!dir.Exists)
         {
+            return Enumerable.Empty<CompletionResult>();
+        }
+
+        return dir.EnumerateFileSystemInfos(pattern, SearchOption.TopDirectoryOnly).Select(info =>
+        {
+            var path = $"{info.Name}{KeyUtils.Separator}";
             return new CompletionResult(path, path, CompletionResultType.ParameterValue, path);
         });
     }

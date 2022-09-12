@@ -8,13 +8,18 @@ namespace PSMemo.Utils;
 
 public static class KeyUtils
 {
+    public const string Separator = ".";
+
     public static string ConvertKeyToPath(string key)
     {
-        throw new NotImplementedException();
+        var components = key.Split(Separator);
+        return Path.Join(components);
     }
 
-    public static string ConvertPathToKey(string parameter)
+    public static string ConvertPathToKey(string path)
     {
-        throw new NotImplementedException();
+        path = path.Trim(Path.DirectorySeparatorChar);
+        var components = path.Split(Path.DirectorySeparatorChar);
+        return string.Join(Separator, components);
     }
 }

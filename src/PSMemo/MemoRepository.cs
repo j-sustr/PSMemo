@@ -19,7 +19,7 @@ public class MemoFileRepository
 
         string[] lines = File.ReadAllLines(path);
 
-        return lines.Where(line => line.Trim() != String.Empty);
+        return lines.Select(line => line.Trim()).Where(line => line != String.Empty);
     }
 
     public void UpdateAll(string key, IEnumerable<string> values)

@@ -13,7 +13,6 @@ public class SetMemo : PSCmdlet
 
     [Parameter(Mandatory = true, Position = 1)]
     [ValidateNotNullOrEmpty]
-    [ArgumentCompleter(typeof(MemoKeyCompleter))]
     public string Value { get; set; }
 
     protected override void ProcessRecord()

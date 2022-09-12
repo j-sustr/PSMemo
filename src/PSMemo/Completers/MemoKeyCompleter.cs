@@ -25,15 +25,26 @@ public class MemoKeyCompleter : IArgumentCompleter
             path = Path.GetDirectoryName(path) ?? "";
         }
 
-        var dir = new DirectoryInfo(Constants.PSMemoFolderPath);
+        string keyBase = KeyUtils.ConvertPathToKey(path);
+        if (!String.IsNullOrEmpty(keyBase))
+        {
+            keyBase = $"{keyBase}{KeyUtils.Separator}";
+        }
+
+        string fullPath = Path.Join(Constants.PSMemoFolderPath, path);
+        var dir = new DirectoryInfo(fullPath);
         if (!dir.Exists)
         {
             return Enumerable.Empty<CompletionResult>();
         }
 
-        return dir.EnumerateFileSystemInfos(pattern, SearchOption.TopDirectoryOnly).Select(info =>
+        return dir.EnumerateFileSystemInfos(pattern, SearchOption.TopDirectoryOnly).Select(fsi =>
         {
-            var path = $"{info.Name}{KeyUtils.Separator}";
+            var path = $"{keyBase}{fsi.Name}";
+            if ((fsi.Attributes & FileAttributes.Directory) == FileAttributes.Directory)
+            {
+                path = $"{path}{KeyUtils.Separator}";
+            }
             return new CompletionResult(path, path, CompletionResultType.ParameterValue, path);
         });
     }

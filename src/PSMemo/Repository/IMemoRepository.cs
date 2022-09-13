@@ -8,9 +8,9 @@ public interface IMemoRepository
 
     public void UpdateAll(string key, IEnumerable<string> values);
 
-    public bool Add(string key, string value);
+    public bool TryAdd(string key, string value);
 
-    public bool Remove(string key, string value);
+    public bool TryRemove(string key, string value);
 
     public void RemoveBranch(string key);
 }

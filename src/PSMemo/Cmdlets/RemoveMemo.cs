@@ -3,8 +3,8 @@ using PSMemo.Completers;
 
 namespace PSMemo.Cmdlets;
 
-[Cmdlet(VerbsCommon.Get, "Memo")]
-public class GetMemo : PSCmdlet
+[Cmdlet(VerbsCommon.Remove, "Memo")]
+public class RemoveMemo : PSCmdlet
 {
     [Parameter(Mandatory = true, Position = 0)]
     [ArgumentCompleter(typeof(MemoKeyCompleter))]

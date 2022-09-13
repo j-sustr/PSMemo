@@ -21,12 +21,10 @@ public class MemoFileRepository : IMemoRepository
 
     public void UpdateAll(string key, IEnumerable<string> values)
     {
-        string path = ConvertKeyToMemoFilePath(key);
-
-        File.WriteAllLines(path, values);
+        WriteAllValues(key, values);
     }
 
-    public bool Add(string key, string value)
+    public bool TryAdd(string key, string value)
     {
         var values = ReadAllValues(key).ToList();
 
@@ -36,21 +34,32 @@ public class MemoFileRepository : IMemoRepository
         if (newValueIsUnique)
         {
             WriteAllValues(key, values);
+            return true;
         }
+        return false;
     }
 
-    public void Remove(string key, string value)
+    public bool TryRemove(string key, string value)
     {
         var values = ReadAllValues(key).ToList();
 
         var newValues = values.Where(_value => _value != value);
 
-        WriteAllValues(key, newValues);
+        bool didRemove = newValues.Count() != values.Count;
+        if (didRemove)
+        {
+            WriteAllValues(key, newValues);
+            return true;
+        }
+        return false;
     }
 
     public void RemoveBranch(string key)
     {
         string childPath = ConvertKeyToPath(key);
+        string path = Path.Join(root, childPath);
+
+        // TODO: check if file of dir
     }
 
     private IEnumerable<string> ReadAllValues(string key)
@@ -64,7 +73,7 @@ public class MemoFileRepository : IMemoRepository
         }
         catch (FileNotFoundException)
         {
-            throw new InvalidMemoKeyException();
+            throw new InvalidMemoKeyException(key);
         }
 
         return lines.Select(line => line.Trim()).Where(line => line != String.Empty);
@@ -74,7 +83,16 @@ public class MemoFileRepository : IMemoRepository
     {
         string path = ConvertKeyToMemoFilePath(key);
 
-        File.WriteAllLines(path, values);
+        try
+        {
+            File.WriteAllLines(path, values);
+        }
+        catch (System.Exception ex)
+        {
+            // TODO: use correct ex type
+            throw ex;
+            // throw new InvalidMemoKeyException(key);
+        }
     }
 
     private string ConvertKeyToMemoFilePath(string key)

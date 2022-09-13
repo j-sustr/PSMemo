@@ -7,8 +7,8 @@ namespace PSMemo.Cmdlets;
 public class SetMemo : PSCmdlet
 {
     [Parameter(Mandatory = true, Position = 0)]
-    [ValidateNotNullOrEmpty]
     [ArgumentCompleter(typeof(MemoKeyCompleter))]
+    [ValidateNotNullOrEmpty]
     public string Key { get; set; }
 
     [Parameter(Mandatory = true, Position = 1)]

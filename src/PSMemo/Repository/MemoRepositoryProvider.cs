@@ -5,7 +5,7 @@ using PSMemo.Repository;
 
 public static class MemoRepositoryProvider
 {
-    public static IMemoRepository Get()
+    public static IMemoRepository GetRepository()
     {
         return new MemoFileRepository(Constants.PSMemoFolderPath);
     }

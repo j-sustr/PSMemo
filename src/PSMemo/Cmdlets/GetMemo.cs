@@ -13,8 +13,10 @@ public class GetMemo : PSCmdlet
 
     protected override void ProcessRecord()
     {
+        var repo = MemoRepositoryProvider.GetRepository();
 
+        var values = repo.GetAll(Key);
 
-        WriteObject($"Entered key: {Key}");
+        WriteObject(values, true);
     }
 }

@@ -11,6 +11,10 @@ public class RemoveMemo : PSCmdlet
     [ValidateNotNullOrEmpty]
     public string Key { get; set; }
 
+    [Parameter(Position = 1)]
+    [ValidateNotNullOrEmpty]
+    public string Value { get; set; }
+
     protected override void ProcessRecord()
     {
 

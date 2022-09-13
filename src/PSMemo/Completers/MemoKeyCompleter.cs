@@ -1,8 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Management.Automation;
 using System.Management.Automation.Language;
-using Microsoft.Extensions.FileSystemGlobbing;
 using PSMemo.Utils;
 
 namespace PSMemo.Completers;
@@ -40,12 +38,22 @@ public class MemoKeyCompleter : IArgumentCompleter
 
         return dir.EnumerateFileSystemInfos(pattern, SearchOption.TopDirectoryOnly).Select(fsi =>
         {
-            var path = $"{keyBase}{fsi.Name}";
-            if ((fsi.Attributes & FileAttributes.Directory) == FileAttributes.Directory)
-            {
-                path = $"{path}{KeyUtils.Separator}";
-            }
-            return new CompletionResult(path, path, CompletionResultType.ParameterValue, path);
+            var key = ConvertFileSystemInfoToKey(fsi, keyBase);
+            return new CompletionResult(key, key, CompletionResultType.ParameterValue, key);
         });
+    }
+
+    private string ConvertFileSystemInfoToKey(FileSystemInfo fsi, string keyBase)
+    {
+
+        if ((fsi.Attributes & FileAttributes.Directory) == FileAttributes.Directory)
+        {
+            return $"{keyBase}{fsi.Name}{KeyUtils.Separator}";
+        }
+        else
+        {
+            var fileName = Path.GetFileNameWithoutExtension(fsi.Name);
+            return $"{keyBase}{fileName}";
+        }
     }
 }

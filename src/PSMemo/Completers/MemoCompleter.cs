@@ -21,12 +21,15 @@ public class MemoCompleter : IArgumentCompleter
         CommandAst commandAst,
         IDictionary fakeBoundParameters)
     {
+        var repo = MemoRepositoryProvider.GetRepository();
 
-        string[] cars = { "Volvo", "BMW", "Ford", "Mazda" };
+        var values = repo.GetAll(Key);
 
-        foreach (var s in cars)
+        return values
+        .Where(value => value.StartsWith(wordToComplete))
+        .Select(value =>
         {
-            yield return new CompletionResult(s, s, CompletionResultType.ParameterValue, s);
-        }
+            return new CompletionResult(value, value, CompletionResultType.ParameterValue, value);
+        });
     }
 }

@@ -71,6 +71,10 @@ public class MemoFileRepository : IMemoRepository
         {
             lines = File.ReadAllLines(path);
         }
+        catch (DirectoryNotFoundException)
+        {
+            throw new InvalidMemoKeyException(key);
+        }
         catch (FileNotFoundException)
         {
             throw new InvalidMemoKeyException(key);

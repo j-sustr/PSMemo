@@ -9,7 +9,7 @@
 @{
 
 # Script module or binary module file associated with this manifest.
-# RootModule = 'PSMemo.dll'
+RootModule = 'PSMemo.dll'
 
 # Version number of this module.
 ModuleVersion = '0.0.1'
@@ -72,10 +72,14 @@ Copyright = '(c) User. All rights reserved.'
 FunctionsToExport = @()
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-CmdletsToExport = @()
+CmdletsToExport = @(
+  'Get-Memo',
+  'Remove-Memo',
+  'Set-Memo'
+)
 
 # Variables to export from this module
-VariablesToExport = '*'
+VariablesToExport = @()
 
 # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
 AliasesToExport = @()

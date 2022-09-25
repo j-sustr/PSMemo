@@ -1,4 +1,5 @@
 using System.Linq;
+using System.IO.Abstractions;
 using PSMemo.Exception;
 using static PSMemo.Constants;
 using static PSMemo.Utils.KeyUtils;
@@ -7,11 +8,13 @@ namespace PSMemo.Repository;
 
 public class MemoFileRepository : IMemoRepository
 {
-    private readonly string root;
+    private readonly IFileSystem _fileSystem;
+    private readonly string _root;
 
-    public MemoFileRepository(string root)
+    public MemoFileRepository(IFileSystem fileSystem, string root)
     {
-        this.root = root;
+        this._fileSystem = fileSystem;
+        this._root = root;
     }
 
     public IEnumerable<string> GetAll(string key)
@@ -57,7 +60,7 @@ public class MemoFileRepository : IMemoRepository
     public void RemoveBranch(string key)
     {
         string childPath = ConvertKeyToPath(key);
-        string path = Path.Join(root, childPath);
+        string path = Path.Join(_root, childPath);
 
         // TODO: check if file of dir
     }
@@ -69,7 +72,7 @@ public class MemoFileRepository : IMemoRepository
         string[] lines;
         try
         {
-            lines = File.ReadAllLines(path);
+            lines = _fileSystem.File.ReadAllLines(path);
         }
         catch (DirectoryNotFoundException)
         {
@@ -89,7 +92,7 @@ public class MemoFileRepository : IMemoRepository
 
         try
         {
-            File.WriteAllLines(path, values);
+            _fileSystem.File.WriteAllLines(path, values);
         }
         catch (System.Exception ex)
         {
@@ -102,7 +105,7 @@ public class MemoFileRepository : IMemoRepository
     private string ConvertKeyToMemoFilePath(string key)
     {
         string childPath = ConvertKeyToPath(key);
-        string path = Path.Join(root, childPath);
+        string path = Path.Join(_root, childPath);
         return $"{path}.{PSMemoFileExtension}";
     }
 }

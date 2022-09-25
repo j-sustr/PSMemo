@@ -1,10 +1,11 @@
 ﻿using System.Management.Automation;
+using PSMemo.Cmdlets.Common;
 using PSMemo.Completers;
 
 namespace PSMemo.Cmdlets;
 
 [Cmdlet(VerbsCommon.Get, "Memo")]
-public class GetMemo : PSCmdlet
+public class GetMemo : PSMemoCmdlet
 {
     [Parameter(Mandatory = true, Position = 0)]
     [ArgumentCompleter(typeof(MemoKeyCompleter))]
@@ -13,7 +14,7 @@ public class GetMemo : PSCmdlet
 
     protected override void ProcessRecord()
     {
-        var repo = MemoRepositoryProvider.GetRepository();
+        var repo = GetRepository();
 
         var values = repo.GetAll(Key);
 

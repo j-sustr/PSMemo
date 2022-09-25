@@ -1,10 +1,11 @@
 using System.Management.Automation;
+using PSMemo.Cmdlets.Common;
 using PSMemo.Completers;
 
 namespace PSMemo.Cmdlets;
 
 [Cmdlet(VerbsCommon.Remove, "Memo")]
-public class RemoveMemo : PSCmdlet
+public class RemoveMemo : PSMemoCmdlet
 {
     [Parameter(Mandatory = true, Position = 0)]
     [ArgumentCompleter(typeof(MemoKeyCompleter))]

@@ -1,7 +1,7 @@
 using Moq;
 using PSMemo.Repository;
 
-namespace PSMemo.Tests;
+namespace PSMemo.Cmdlets.Tests;
 
 public class GetMemoTests
 {
@@ -9,5 +9,11 @@ public class GetMemoTests
     public void SuccessfullyGet(string parameter)
     {
         var mockRepo = new Mock<IMemoRepository>();
+
+        var cmdlet = new GetMemo()
+        {
+
+        }
+
     }
 }

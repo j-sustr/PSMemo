@@ -1,10 +1,11 @@
 using System.Management.Automation;
+using PSMemo.Cmdlets.Common;
 using PSMemo.Completers;
 
 namespace PSMemo.Cmdlets;
 
 [Cmdlet(VerbsCommon.Set, "Memo")]
-public class SetMemo : PSCmdlet
+public class SetMemo : PSMemoCmdlet
 {
     [Parameter(Mandatory = true, Position = 0)]
     [ArgumentCompleter(typeof(MemoKeyCompleter))]

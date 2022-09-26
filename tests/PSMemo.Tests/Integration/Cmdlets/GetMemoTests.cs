@@ -6,7 +6,7 @@ using PSMemo.Tests;
 using PSMemo.Cmdlets;
 using static PSMemo.Tests.TestUtils;
 
-namespace PSMemo.Tests.Unit.Cmdlets;
+namespace PSMemo.Tests.Integration.Cmdlets;
 
 public class GetMemoTests
 {

@@ -8,7 +8,7 @@ using static PSMemo.Tests.TestUtils;
 using System.IO.Abstractions;
 using FluentAssertions;
 
-namespace PSMemo.Tests.Unit.Cmdlets;
+namespace PSMemo.Tests.Integration.Cmdlets;
 
 public class AddMemoTests
 {

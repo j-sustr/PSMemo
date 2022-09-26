@@ -29,11 +29,11 @@ public class MemoFileRepository : IMemoRepository
 
     public bool TryAdd(string key, string value)
     {
-        var values = ReadAllValues(key).ToList();
+        var values = ReadAllValues(key)
+            .Prepend(value)
+            .ToList();
 
-        values.Prepend(value);
-
-        bool newValueIsUnique = value.Distinct().Count() == values.Count;
+        bool newValueIsUnique = values.Distinct().Count() == values.Count;
         if (newValueIsUnique)
         {
             WriteAllValues(key, values);

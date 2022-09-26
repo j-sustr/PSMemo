@@ -16,6 +16,10 @@ public class AddMemo : PSMemoCmdlet
     [ValidateNotNullOrEmpty]
     public string Value { get; set; } = null!;
 
+    public AddMemo() : base() { }
+
+    public AddMemo(PSMemoCmdletDependencies dependencies) : base(dependencies) { }
+
     protected override void ProcessRecord()
     {
         var repo = GetRepository();

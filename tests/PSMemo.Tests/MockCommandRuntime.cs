@@ -68,6 +68,31 @@ public class MockCommandRuntime<T> : ICommandRuntime
         }
     }
 
+
+    public void WriteCommandDetail(string text)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void WriteDebug(string text)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void WriteProgress(long sourceId, ProgressRecord progressRecord)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void WriteProgress(ProgressRecord progressRecord)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void WriteVerbose(string text)
+    {
+    }
+
     public bool ShouldContinue(string query, string caption)
     {
         throw new NotImplementedException();
@@ -105,31 +130,6 @@ public class MockCommandRuntime<T> : ICommandRuntime
     }
 
     public bool TransactionAvailable()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void WriteCommandDetail(string text)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void WriteDebug(string text)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void WriteProgress(long sourceId, ProgressRecord progressRecord)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void WriteProgress(ProgressRecord progressRecord)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void WriteVerbose(string text)
     {
         throw new NotImplementedException();
     }

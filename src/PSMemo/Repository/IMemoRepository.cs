@@ -4,13 +4,13 @@ namespace PSMemo.Repository;
 
 public interface IMemoRepository
 {
-    public IEnumerable<string> GetAll(string key);
+    public IEnumerable<string> ListCollectionKeys();
 
-    public void UpdateAll(string key, IEnumerable<string> values);
+    public IEnumerable<string> GetCollection(string key);
+
+    public void RemoveCollection(string key);
 
     public bool TryAdd(string key, string value);
 
     public bool TryRemove(string key, string value);
-
-    public void RemoveBranch(string key);
 }

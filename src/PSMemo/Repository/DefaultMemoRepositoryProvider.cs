@@ -8,6 +8,6 @@ public static class DefaultMemoRepositoryProvider
     {
         var fileSystem = new FileSystem();
 
-        return new MemoFileRepository(fileSystem, Constants.PSMemoFolderPath);
+        return new MemoFileSystemRepository(fileSystem, Constants.PSMemoFolderPath);
     }
 }

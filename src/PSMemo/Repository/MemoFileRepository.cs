@@ -2,29 +2,38 @@ using System.Linq;
 using System.IO.Abstractions;
 using PSMemo.Exception;
 using static PSMemo.Constants;
-using static PSMemo.Utils.KeyUtils;
+using static PSMemo.Utils.KeyTreeUtils;
 
 namespace PSMemo.Repository;
 
-public class MemoFileRepository : IMemoRepository
+public class MemoFileSystemRepository : IMemoRepository
 {
     private readonly IFileSystem _fileSystem;
     private readonly string _root;
 
-    public MemoFileRepository(IFileSystem fileSystem, string root)
+    public MemoFileSystemRepository(IFileSystem fileSystem, string root)
     {
         this._fileSystem = fileSystem;
         this._root = root;
     }
 
-    public IEnumerable<string> GetAll(string key)
+    public IEnumerable<string> ListCollectionKeys()
+    {
+        return _fileSystem.Directory.EnumerateFiles(_root)
+            .Select(path => ConvertPathToKey(path));
+    }
+
+    public IEnumerable<string> GetCollection(string key)
     {
         return ReadAllValues(key);
     }
 
-    public void UpdateAll(string key, IEnumerable<string> values)
+    public void RemoveCollection(string key)
     {
-        WriteAllValues(key, values);
+        string childPath = ConvertKeyToPath(key);
+        string path = Path.Join(_root, childPath);
+
+        _fileSystem.File.Delete(path);
     }
 
     public bool TryAdd(string key, string value)
@@ -55,14 +64,6 @@ public class MemoFileRepository : IMemoRepository
             return true;
         }
         return false;
-    }
-
-    public void RemoveBranch(string key)
-    {
-        string childPath = ConvertKeyToPath(key);
-        string path = Path.Join(_root, childPath);
-
-        // TODO: check if file of dir
     }
 
     private IEnumerable<string> ReadAllValues(string key)

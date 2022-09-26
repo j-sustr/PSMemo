@@ -24,7 +24,7 @@ public class MemoCompleter : IArgumentCompleter
     {
         var repo = DefaultMemoRepositoryProvider.GetRepository();
 
-        var values = repo.GetAll(Key);
+        var values = repo.GetCollection(Key);
 
         return values
         .Where(value => value.StartsWith(wordToComplete))

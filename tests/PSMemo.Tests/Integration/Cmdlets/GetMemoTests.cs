@@ -16,7 +16,7 @@ public class GetMemoTests
         var mockRuntime = new MockCommandRuntime<string>();
         var mockRepo = new Mock<IMemoRepository>();
 
-        mockRepo.Setup(x => x.GetAll(It.IsAny<string>()))
+        mockRepo.Setup(x => x.GetCollection(It.IsAny<string>()))
             .Returns(new string[] { "item1", "item2" });
 
         var deps = new PSMemoCmdletDependencies

@@ -25,7 +25,7 @@ public class AddMemoTests
         mockFileSystem.Setup(x => x.File.WriteAllLines(It.IsAny<string>(), It.IsAny<IEnumerable<string>>()))
             .Callback((string _, IEnumerable<string> _lines) => writtenLines = _lines.ToArray());
 
-        var repo = new MemoFileRepository(mockFileSystem.Object, "X:\\test");
+        var repo = new MemoFileSystemRepository(mockFileSystem.Object, "X:\\test");
 
         var deps = new PSMemoCmdletDependencies
         {

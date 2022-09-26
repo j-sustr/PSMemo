@@ -15,18 +15,18 @@ public class MemoKeyFromFileSystemTreeCompleter : IArgumentCompleter
         CommandAst commandAst,
         IDictionary fakeBoundParameters)
     {
-        string path = KeyUtils.ConvertKeyToPath(wordToComplete);
+        string path = KeyTreeUtils.ConvertKeyToPath(wordToComplete);
         string pattern = "*";
-        if (!wordToComplete.EndsWith(KeyUtils.Separator))
+        if (!wordToComplete.EndsWith(KeyTreeUtils.Separator))
         {
             pattern = $"{Path.GetFileName(path)}*";
             path = Path.GetDirectoryName(path) ?? "";
         }
 
-        string keyBase = KeyUtils.ConvertPathToKey(path);
+        string keyBase = KeyTreeUtils.ConvertPathToKey(path);
         if (!String.IsNullOrEmpty(keyBase))
         {
-            keyBase = $"{keyBase}{KeyUtils.Separator}";
+            keyBase = $"{keyBase}{KeyTreeUtils.Separator}";
         }
 
         string fullPath = Path.Join(Constants.PSMemoFolderPath, path);
@@ -48,7 +48,7 @@ public class MemoKeyFromFileSystemTreeCompleter : IArgumentCompleter
 
         if ((fsi.Attributes & FileAttributes.Directory) == FileAttributes.Directory)
         {
-            return $"{keyBase}{fsi.Name}{KeyUtils.Separator}";
+            return $"{keyBase}{fsi.Name}{KeyTreeUtils.Separator}";
         }
         else
         {

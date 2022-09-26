@@ -6,7 +6,7 @@ using System.Management.Automation.Language;
 namespace PSMemo.Utils;
 
 
-public static class KeyUtils
+public static class KeyTreeUtils
 {
     public const string Separator = ".";
 

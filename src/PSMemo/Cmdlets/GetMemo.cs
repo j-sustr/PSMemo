@@ -20,7 +20,7 @@ public class GetMemo : PSMemoCmdlet
     {
         var repo = GetRepository();
 
-        var values = repo.GetAll(Key);
+        var values = repo.GetCollection(Key);
 
         WriteObject(values, true);
     }

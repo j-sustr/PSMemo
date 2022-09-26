@@ -37,6 +37,12 @@ public class MemoFileSystemRepository : IMemoRepository
 
     public bool TryAdd(string key, string value)
     {
+        if (!DoesCollectionExist(key))
+        {
+            WriteAllValues(key, new string[] { value });
+            return true;
+        }
+
         var values = ReadAllValues(key)
             .Prepend(value)
             .ToList();
@@ -100,6 +106,13 @@ public class MemoFileSystemRepository : IMemoRepository
             throw ex;
             // throw new InvalidMemoKeyException(key);
         }
+    }
+
+    private bool DoesCollectionExist(string key)
+    {
+        string path = ConvertKeyToMemoFilePath(key);
+
+        return _fileSystem.File.Exists(path);
     }
 
     private string ConvertKeyToMemoFilePath(string key)

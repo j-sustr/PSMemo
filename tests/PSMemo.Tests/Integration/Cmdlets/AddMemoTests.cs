@@ -20,6 +20,8 @@ public class AddMemoTests
 
         string[]? writtenLines = null;
 
+        mockFileSystem.Setup(x => x.File.Exists(It.IsAny<string>()))
+            .Returns(true);
         mockFileSystem.Setup(x => x.File.ReadAllLines(It.IsAny<string>()))
             .Returns(new string[] { "item1", "item2" });
         mockFileSystem.Setup(x => x.File.WriteAllLines(It.IsAny<string>(), It.IsAny<IEnumerable<string>>()))
@@ -40,7 +42,8 @@ public class AddMemoTests
 
         Execute(cmdlet);
 
-        string expectedPath = @"X:\test\a\b\c.memo";
+        string expectedPath = @"X:\test\a.b.c.memo";
+        mockFileSystem.Verify(x => x.File.Exists(expectedPath), Times.Once);
         mockFileSystem.Verify(x => x.File.ReadAllLines(expectedPath), Times.Once);
         mockFileSystem.Verify(x => x.File.WriteAllLines(expectedPath, It.IsAny<IEnumerable<string>>()), Times.Once);
 

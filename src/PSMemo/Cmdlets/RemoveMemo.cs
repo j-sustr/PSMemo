@@ -7,26 +7,26 @@ namespace PSMemo.Cmdlets;
 [Cmdlet(VerbsCommon.Remove, "Memo")]
 public class RemoveMemo : PSMemoCmdlet
 {
-    const string psValue = "Value";
-    const string psBranch = "Branch";
+    const string psDefault = "Default";
+    const string psRemoveCollection = "RemoveCollection";
 
     [Parameter(Mandatory = true, Position = 0)]
     [ArgumentCompleter(typeof(MemoKeyFromFileSystemTreeCompleter))]
     [ValidateNotNullOrEmpty]
     public string Key { get; set; } = null!;
 
-    [Parameter(Position = 1, ParameterSetName = psValue)]
+    [Parameter(Position = 1, ParameterSetName = psDefault)]
     [ValidateNotNullOrEmpty]
     public string Value { get; set; } = null!;
 
-    [Parameter(ParameterSetName = psBranch)]
-    public SwitchParameter Branch { get; set; }
+    [Parameter(ParameterSetName = psRemoveCollection)]
+    public SwitchParameter RemoveCollection { get; set; }
 
     protected override void ProcessRecord()
     {
         var repo = GetRepository();
 
-        if (Branch.IsPresent)
+        if (RemoveCollection.IsPresent)
         {
             repo.RemoveCollection(Key);
             return;

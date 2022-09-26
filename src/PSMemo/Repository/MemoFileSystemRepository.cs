@@ -2,7 +2,6 @@ using System.Linq;
 using System.IO.Abstractions;
 using PSMemo.Exception;
 using static PSMemo.Constants;
-using static PSMemo.Utils.KeyTreeUtils;
 
 namespace PSMemo.Repository;
 
@@ -20,7 +19,8 @@ public class MemoFileSystemRepository : IMemoRepository
     public IEnumerable<string> ListCollectionKeys()
     {
         return _fileSystem.Directory.EnumerateFiles(_root)
-            .Select(path => ConvertPathToKey(path));
+            .Where(path => IsMemoFile(path))
+            .Select(path => ConvertMemoFilePathToKey(path));
     }
 
     public IEnumerable<string> GetCollection(string key)
@@ -30,8 +30,7 @@ public class MemoFileSystemRepository : IMemoRepository
 
     public void RemoveCollection(string key)
     {
-        string childPath = ConvertKeyToPath(key);
-        string path = Path.Join(_root, childPath);
+        string path = ConvertKeyToMemoFilePath(key);
 
         _fileSystem.File.Delete(path);
     }
@@ -105,8 +104,17 @@ public class MemoFileSystemRepository : IMemoRepository
 
     private string ConvertKeyToMemoFilePath(string key)
     {
-        string childPath = ConvertKeyToPath(key);
-        string path = Path.Join(_root, childPath);
-        return $"{path}.{PSMemoFileExtension}";
+        string fileName = $"{key}.{PSMemoFileExtension}";
+        return Path.Join(_root, fileName);
+    }
+
+    private string ConvertMemoFilePathToKey(string path)
+    {
+        return Path.GetFileNameWithoutExtension(path);
+    }
+
+    private bool IsMemoFile(string path)
+    {
+        return Path.GetExtension(path) == $".{PSMemoFileExtension}";
     }
 }

@@ -8,7 +8,7 @@ namespace PSMemo.Cmdlets;
 public class AddMemo : PSMemoCmdlet
 {
     [Parameter(Mandatory = true, Position = 0)]
-    [ArgumentCompleter(typeof(MemoKeyFromFileSystemTreeCompleter))]
+    [ArgumentCompleter(typeof(MemoKeyCompleter))]
     [ValidateNotNullOrEmpty]
     public string Key { get; set; } = null!;
 

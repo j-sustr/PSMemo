@@ -11,7 +11,7 @@ public class RemoveMemo : PSMemoCmdlet
     const string psRemoveCollection = "RemoveCollection";
 
     [Parameter(Mandatory = true, Position = 0)]
-    [ArgumentCompleter(typeof(MemoKeyFromFileSystemTreeCompleter))]
+    [ArgumentCompleter(typeof(MemoKeyCompleter))]
     [ValidateNotNullOrEmpty]
     public string Key { get; set; } = null!;
 

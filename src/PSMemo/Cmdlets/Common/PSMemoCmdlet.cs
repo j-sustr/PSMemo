@@ -8,12 +8,9 @@ public abstract class PSMemoCmdlet : Cmdlet
 {
     internal IMemoRepository? _repository { get; set; }
 
-    public PSMemoCmdlet()
-    {
+    public PSMemoCmdlet() : base() { }
 
-    }
-
-    public PSMemoCmdlet(PSMemoCmdletDependencies dependencies)
+    public PSMemoCmdlet(PSMemoCmdletDependencies dependencies) : base()
     {
         ArgumentNullException.ThrowIfNull(dependencies.Repository);
 
@@ -27,14 +24,7 @@ public abstract class PSMemoCmdlet : Cmdlet
             return _repository;
         }
 
-        return GetFileRepository();
-    }
-
-    private IMemoRepository GetFileRepository()
-    {
-        var fileSystem = new FileSystem();
-
-        return new MemoFileRepository(fileSystem, Constants.PSMemoFolderPath);
+        return DefaultMemoRepositoryProvider.GetRepository();
     }
 
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Management.Automation;
 using System.Management.Automation.Language;
+using PSMemo.Repository;
 
 namespace PSMemo.Completers;
 
@@ -21,7 +22,7 @@ public class MemoCompleter : IArgumentCompleter
         CommandAst commandAst,
         IDictionary fakeBoundParameters)
     {
-        var repo = MemoRepositoryProvider.GetRepository();
+        var repo = DefaultMemoRepositoryProvider.GetRepository();
 
         var values = repo.GetAll(Key);
 

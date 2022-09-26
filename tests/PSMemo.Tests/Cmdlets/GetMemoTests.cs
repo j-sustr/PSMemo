@@ -24,11 +24,10 @@ public class GetMemoTests
             Key = "a.b.c"
         };
 
-        var result = cmdlet.Invoke();
+        var result = cmdlet.Invoke().OfType<string>().ToList();
 
-        foreach (var item in result)
-        {
-            Assert.Equal("", item);
-        }
+        Assert.Equal(2, result.Count);
+        Assert.Equal(result[0], "item1");
+        Assert.Equal(result[1], "item2");
     }
 }

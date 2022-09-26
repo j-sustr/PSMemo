@@ -2,14 +2,18 @@ using Moq;
 using PSMemo.Cmdlets.Common;
 using PSMemo.Repository;
 using System.Linq;
+using PSMemo.Tests;
+using PSMemo.Cmdlets;
+using static PSMemo.Tests.TestUtils;
 
-namespace PSMemo.Cmdlets.Tests;
+namespace PSMemo.Tests.Cmdlets;
 
 public class GetMemoTests
 {
     [Fact]
     public void SuccessfullyGet()
     {
+        var mockRuntime = new MockCommandRuntime<string>();
         var mockRepo = new Mock<IMemoRepository>();
 
         mockRepo.Setup(x => x.GetAll(It.IsAny<string>()))
@@ -21,13 +25,15 @@ public class GetMemoTests
         };
         var cmdlet = new GetMemo(deps)
         {
+            CommandRuntime = mockRuntime,
             Key = "a.b.c"
         };
 
-        var result = cmdlet.Invoke().OfType<string>().ToList();
+        Execute(cmdlet);
 
-        Assert.Equal(2, result.Count);
-        Assert.Equal(result[0], "item1");
-        Assert.Equal(result[1], "item2");
+        var output = mockRuntime.Output;
+        Assert.Equal(2, output.Count);
+        Assert.Equal(output[0], "item1");
+        Assert.Equal(output[1], "item2");
     }
 }

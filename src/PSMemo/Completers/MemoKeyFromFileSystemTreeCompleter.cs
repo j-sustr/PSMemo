@@ -5,7 +5,7 @@ using PSMemo.Utils;
 
 namespace PSMemo.Completers;
 
-public class MemoKeyCompleter : IArgumentCompleter
+public class MemoKeyFromFileSystemTreeCompleter : IArgumentCompleter
 {
 
     public IEnumerable<CompletionResult> CompleteArgument(

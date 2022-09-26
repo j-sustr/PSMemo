@@ -4,8 +4,8 @@ using PSMemo.Completers;
 
 namespace PSMemo.Cmdlets;
 
-[Cmdlet(VerbsCommon.Set, "Memo")]
-public class SetMemo : PSMemoCmdlet
+[Cmdlet(VerbsCommon.Add, "Memo")]
+public class AddMemo : PSMemoCmdlet
 {
     [Parameter(Mandatory = true, Position = 0)]
     [ArgumentCompleter(typeof(MemoKeyCompleter))]
@@ -18,6 +18,17 @@ public class SetMemo : PSMemoCmdlet
 
     protected override void ProcessRecord()
     {
-        WriteObject($"Entered key: {Key}");
+        var repo = GetRepository();
+
+        bool ok = repo.TryAdd(Key, Value);
+        if (ok)
+        {
+            WriteVerbose($"Memo '{Value}' was added.");
+        }
+        else
+        {
+            WriteWarning($"Memo '{Value}' is already added.");
+        }
+
     }
 }

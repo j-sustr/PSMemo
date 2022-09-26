@@ -6,7 +6,7 @@ namespace PSMemo.Cmdlets.Common;
 
 public abstract class PSMemoCmdlet : Cmdlet
 {
-    internal IMemoRepository? _repository { get; set; }
+    internal IMemoRepository? _repository;
 
     public PSMemoCmdlet() : base() { }
 

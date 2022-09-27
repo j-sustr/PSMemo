@@ -7,16 +7,18 @@ using PSMemo.Cmdlets;
 using static PSMemo.Tests.TestUtils;
 using System.IO.Abstractions;
 using FluentAssertions;
+using System.Management.Automation;
 
 namespace PSMemo.Tests.Integration.Cmdlets;
 
-public class AddMemoTests
+public class RemoveMemoTests
 {
     [Fact]
-    public void AddOneItem()
+    public void RemoveOneItem()
     {
         var mockRuntime = new MockCommandRuntime<string>();
         var mockFileSystem = new Mock<IFileSystem>();
+        var repo = new MemoFileSystemRepository(mockFileSystem.Object, "X:\\test");
 
         string[]? writtenLines = null;
 
@@ -27,25 +29,51 @@ public class AddMemoTests
         mockFileSystem.Setup(x => x.File.WriteAllLines(It.IsAny<string>(), It.IsAny<IEnumerable<string>>()))
             .Callback((string _, IEnumerable<string> _lines) => writtenLines = _lines.ToArray());
 
-        var repo = new MemoFileSystemRepository(mockFileSystem.Object, "X:\\test");
 
-        var cmdlet = new AddMemo()
+        var cmdlet = new RemoveMemo()
         {
             CommandRuntime = mockRuntime,
             Repository = repo,
-            Key = "a.b.c",
-            Value = "newItem"
+            Key = "xyz",
+            Value = "item2"
         };
 
         Execute(cmdlet);
 
-        string expectedPath = @"X:\test\a.b.c.memo";
-        mockFileSystem.Verify(x => x.File.Exists(expectedPath), Times.Once);
+        string expectedPath = @"X:\test\xyz.memo";
         mockFileSystem.Verify(x => x.File.ReadAllLines(expectedPath), Times.Once);
         mockFileSystem.Verify(x => x.File.WriteAllLines(expectedPath, It.IsAny<IEnumerable<string>>()), Times.Once);
 
         mockRuntime.Output.Should().HaveCount(0);
 
-        writtenLines.Should().Equal("newItem", "item1", "item2");
+        writtenLines.Should().Equal("item1");
+    }
+
+    [Fact]
+    public void RemoveCollection()
+    {
+        var mockRuntime = new MockCommandRuntime<string>();
+        var mockFileSystem = new Mock<IFileSystem>();
+        var repo = new MemoFileSystemRepository(mockFileSystem.Object, "X:\\test");
+
+        mockFileSystem.Setup(x => x.File.Exists(It.IsAny<string>()))
+            .Returns(true);
+
+
+        var cmdlet = new RemoveMemo()
+        {
+            CommandRuntime = mockRuntime,
+            Repository = repo,
+            Key = "xyz",
+            RemoveCollection = new SwitchParameter(true)
+        };
+
+        Execute(cmdlet);
+
+        string expectedPath = @"X:\test\xyz.memo";
+        mockFileSystem.Verify(x => x.File.Exists(expectedPath), Times.Once);
+        mockFileSystem.Verify(x => x.File.Delete(expectedPath), Times.Once);
+
+        mockRuntime.Output.Should().HaveCount(0);
     }
 }

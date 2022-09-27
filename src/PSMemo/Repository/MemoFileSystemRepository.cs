@@ -30,6 +30,11 @@ public class MemoFileSystemRepository : IMemoRepository
 
     public void RemoveCollection(string key)
     {
+        if (!DoesCollectionExist(key))
+        {
+            throw new InvalidMemoKeyException(key);
+        }
+
         string path = ConvertKeyToMemoFilePath(key);
 
         _fileSystem.File.Delete(path);
@@ -79,10 +84,6 @@ public class MemoFileSystemRepository : IMemoRepository
         try
         {
             lines = _fileSystem.File.ReadAllLines(path);
-        }
-        catch (DirectoryNotFoundException)
-        {
-            throw new InvalidMemoKeyException(key);
         }
         catch (FileNotFoundException)
         {

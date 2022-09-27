@@ -17,9 +17,9 @@ public class MemoCompleter : IArgumentCompleter
         _repository = DefaultMemoRepositoryProvider.GetRepository();
     }
 
-    public MemoCompleter(string key, IMemoRepository repository)
+    public MemoCompleter(string keyParameter, IMemoRepository repository)
     {
-        _keyParameter = key;
+        _keyParameter = keyParameter;
         _repository = repository;
     }
 
@@ -56,13 +56,17 @@ public class MemoCompleter : IArgumentCompleter
 
 public class MemoCompletionsAttribute
 {
-    public MemoCompletionsAttribute()
-    {
+    private readonly string _keyParameter;
 
+    public MemoCompletionsAttribute(string keyParameter)
+    {
+        _keyParameter = keyParameter;
     }
 
     IArgumentCompleter Create()
     {
-        return new MemoKeyCompleter();
+        var repository = DefaultMemoRepositoryProvider.GetRepository();
+
+        return new MemoCompleter(_keyParameter, repository);
     }
 }

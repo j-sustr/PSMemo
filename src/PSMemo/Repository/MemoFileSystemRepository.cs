@@ -98,16 +98,7 @@ public class MemoFileSystemRepository : IMemoRepository
     {
         string path = ConvertKeyToMemoFilePath(key);
 
-        try
-        {
-            _fileSystem.File.WriteAllLines(path, values);
-        }
-        catch (System.Exception ex)
-        {
-            // TODO: use correct ex type
-            throw ex;
-            // throw new InvalidMemoKeyException(key);
-        }
+        _fileSystem.File.WriteAllLines(path, values);
     }
 
     private bool DoesCollectionExist(string key)

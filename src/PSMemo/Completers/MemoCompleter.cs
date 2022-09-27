@@ -8,11 +8,19 @@ namespace PSMemo.Completers;
 
 public class MemoCompleter : IArgumentCompleter
 {
-    public string Key { get; set; }
+    public readonly string _keyParameter;
+    public readonly IMemoRepository _repository;
 
-    public MemoCompleter(string key)
+    public MemoCompleter()
     {
-        Key = key;
+        _keyParameter = "Key";
+        _repository = DefaultMemoRepositoryProvider.GetRepository();
+    }
+
+    public MemoCompleter(string key, IMemoRepository repository)
+    {
+        _keyParameter = key;
+        _repository = repository;
     }
 
     public IEnumerable<CompletionResult> CompleteArgument(
@@ -22,15 +30,39 @@ public class MemoCompleter : IArgumentCompleter
         CommandAst commandAst,
         IDictionary fakeBoundParameters)
     {
-        var repo = DefaultMemoRepositoryProvider.GetRepository();
+        string? key = fakeBoundParameters[_keyParameter] as string;
+        if (String.IsNullOrWhiteSpace(key))
+        {
+            return Enumerable.Empty<CompletionResult>();
+        }
 
-        var values = repo.GetCollection(Key);
+        IEnumerable<string> values;
+        try
+        {
+            values = _repository.GetCollection(key as string);
+        }
+        catch (System.Exception)
+        {
+            return Enumerable.Empty<CompletionResult>();
+        }
 
         return values
-        .Where(value => value.StartsWith(wordToComplete))
         .Select(value =>
         {
             return new CompletionResult(value, value, CompletionResultType.ParameterValue, value);
         });
+    }
+}
+
+public class MemoCompletionsAttribute
+{
+    public MemoCompletionsAttribute()
+    {
+
+    }
+
+    IArgumentCompleter Create()
+    {
+        return new MemoKeyCompleter();
     }
 }

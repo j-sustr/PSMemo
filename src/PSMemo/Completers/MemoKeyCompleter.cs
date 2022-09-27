@@ -9,10 +9,16 @@ namespace PSMemo.Completers;
 
 public class MemoKeyCompleter : IArgumentCompleter
 {
+    private readonly IMemoRepository _repository;
 
     public MemoKeyCompleter()
     {
+        _repository = DefaultMemoRepositoryProvider.GetRepository();
+    }
 
+    public MemoKeyCompleter(IMemoRepository repository)
+    {
+        _repository = repository;
     }
 
     public IEnumerable<CompletionResult> CompleteArgument(
@@ -31,9 +37,7 @@ public class MemoKeyCompleter : IArgumentCompleter
 
         var pattern = new WildcardPattern(wordToComplete, WildcardOptions.IgnoreCase);
 
-        var repo = DefaultMemoRepositoryProvider.GetRepository();
-
-        return repo.ListCollectionKeys().Where(key =>
+        return _repository.ListCollectionKeys().Where(key =>
         {
             return pattern.IsMatch(key);
         }).Select(key =>
@@ -43,11 +47,15 @@ public class MemoKeyCompleter : IArgumentCompleter
     }
 }
 
-public class MemoKeyCompletionsAttribute : ArgumentCompleterAttribute
+public class MemoKeyCompletionsAttribute
 {
-    public MemoKeyCompletionsAttribute() : base(typeof(MemoKeyCompleter))
+    public MemoKeyCompletionsAttribute()
     {
 
     }
 
+    IArgumentCompleter Create()
+    {
+        return new MemoKeyCompleter();
+    }
 }

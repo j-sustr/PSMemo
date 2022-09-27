@@ -17,6 +17,13 @@ public class MemoKeyCompleter : IArgumentCompleter
         CommandAst commandAst,
         IDictionary fakeBoundParameters)
     {
+        wordToComplete = wordToComplete.Trim();
+
+        if (!wordToComplete.EndsWith("*"))
+        {
+            wordToComplete = $"{wordToComplete}*";
+        }
+
         var pattern = new WildcardPattern(wordToComplete, WildcardOptions.IgnoreCase);
 
         var repo = DefaultMemoRepositoryProvider.GetRepository();

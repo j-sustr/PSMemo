@@ -2,6 +2,7 @@ using System.Linq;
 using System.IO.Abstractions;
 using PSMemo.Exception;
 using static PSMemo.Constants;
+using PSMemo.Utils;
 
 namespace PSMemo.Repository;
 
@@ -118,8 +119,15 @@ public class MemoFileSystemRepository : IMemoRepository
 
     private string ConvertKeyToMemoFilePath(string key)
     {
+        if (PathUtils.ContainsInvalidFileNameChars(key))
+        {
+            throw new InvalidMemoKeyException(key);
+        }
+
         string fileName = $"{key}.{PSMemoFileExtension}";
-        return Path.Join(_root, fileName);
+        string path = Path.Join(_root, fileName);
+
+        return path;
     }
 
     private string ConvertMemoFilePathToKey(string path)

@@ -10,6 +10,11 @@ namespace PSMemo.Completers;
 public class MemoKeyCompleter : IArgumentCompleter
 {
 
+    public MemoKeyCompleter()
+    {
+
+    }
+
     public IEnumerable<CompletionResult> CompleteArgument(
         string commandName,
         string parameterName,
@@ -36,4 +41,13 @@ public class MemoKeyCompleter : IArgumentCompleter
             return new CompletionResult(key, key, CompletionResultType.ParameterValue, key);
         });
     }
+}
+
+public class MemoKeyCompletionsAttribute : ArgumentCompleterAttribute
+{
+    public MemoKeyCompletionsAttribute() : base(typeof(MemoKeyCompleter))
+    {
+
+    }
+
 }

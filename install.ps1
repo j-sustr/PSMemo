@@ -1,5 +1,5 @@
 $SrcRoot = "$PSScriptRoot\src\PSMemo"
-$ModuleRoot = "$PSScriptRoot\src\PSMemo\bin\Debug\net6.0\publish"
+$ModuleRoot = "$PSScriptRoot\src\PSMemo\bin\Release\net6.0\publish"
 
 'Running dotnet publish...'
 dotnet publish $SrcRoot -c Release

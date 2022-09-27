@@ -6,15 +6,21 @@ namespace PSMemo.Cmdlets.Common;
 
 public abstract class PSMemoCmdlet : Cmdlet
 {
-    internal IMemoRepository? _repository;
+    private IMemoRepository? _repository;
 
-    public PSMemoCmdlet() : base() { }
-
-    public PSMemoCmdlet(PSMemoCmdletDependencies dependencies) : base()
+    public IMemoRepository Repository
     {
-        ArgumentNullException.ThrowIfNull(dependencies.Repository);
+        set
+        {
+            if (_repository != null)
+            {
+                throw new InvalidOperationException();
+            }
 
-        _repository = dependencies.Repository;
+            ArgumentNullException.ThrowIfNull(value);
+
+            _repository = value;
+        }
     }
 
     public IMemoRepository GetRepository()

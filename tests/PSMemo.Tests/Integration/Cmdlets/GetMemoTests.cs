@@ -19,13 +19,10 @@ public class GetMemoTests
         mockRepo.Setup(x => x.GetCollection(It.IsAny<string>()))
             .Returns(new string[] { "item1", "item2" });
 
-        var deps = new PSMemoCmdletDependencies
-        {
-            Repository = mockRepo.Object
-        };
-        var cmdlet = new GetMemo(deps)
+        var cmdlet = new GetMemo()
         {
             CommandRuntime = mockRuntime,
+            Repository = mockRepo.Object,
             Key = "a.b.c"
         };
 

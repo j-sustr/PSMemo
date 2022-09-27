@@ -12,10 +12,6 @@ public class GetMemo : PSMemoCmdlet
     [ValidateNotNullOrEmpty]
     public string Key { get; set; } = null!;
 
-    public GetMemo() : base() { }
-
-    public GetMemo(PSMemoCmdletDependencies dependencies) : base(dependencies) { }
-
     protected override void ProcessRecord()
     {
         var repo = GetRepository();

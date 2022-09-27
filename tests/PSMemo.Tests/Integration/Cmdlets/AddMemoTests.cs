@@ -29,13 +29,10 @@ public class AddMemoTests
 
         var repo = new MemoFileSystemRepository(mockFileSystem.Object, "X:\\test");
 
-        var deps = new PSMemoCmdletDependencies
-        {
-            Repository = repo
-        };
-        var cmdlet = new AddMemo(deps)
+        var cmdlet = new AddMemo()
         {
             CommandRuntime = mockRuntime,
+            Repository = repo,
             Key = "a.b.c",
             Value = "newItem"
         };

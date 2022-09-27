@@ -11,7 +11,7 @@ public static class PathUtils
     static PathUtils()
     {
         string _invalidFileNameCharsPattern = string.Format("[{0}]", Regex.Escape(new string(Path.GetInvalidFileNameChars())));
-        _invalidFileNameCharsPatternRegex = new Regex(_invalidFileNameCharsPattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.CultureInvariant)
+        _invalidFileNameCharsPatternRegex = new Regex(_invalidFileNameCharsPattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.CultureInvariant);
     }
 
     public static bool ContainsInvalidFileNameChars(string fileName)

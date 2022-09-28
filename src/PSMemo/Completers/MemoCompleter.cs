@@ -15,7 +15,9 @@ public class MemoCompleter : IArgumentCompleter
 
     public MemoCompleter()
     {
-        Key = "test1";
+        KeyResolver = ScriptBlock.Create(@"
+            param($boundParams) $boundParams[""Key""]
+        ");
         _repository = DefaultMemoRepositoryProvider.GetRepository();
     }
 
@@ -83,6 +85,12 @@ public class MemoCompleter : IArgumentCompleter
         }
 
         string key = customResults.First().ToString();
+
+        if (String.IsNullOrEmpty(key))
+        {
+            return Enumerable.Empty<CompletionResult>();
+        }
+
 
         IEnumerable<string> values;
         try

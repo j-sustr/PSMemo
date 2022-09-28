@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Management.Automation;
 using System.Management.Automation.Language;
 using PSMemo.Repository;
@@ -8,26 +9,20 @@ namespace PSMemo.Completers;
 
 public class MemoCompleter : IArgumentCompleter
 {
-    public readonly string _key;
+    public string? Key { get; init; }
+    public ScriptBlock? KeyResolver { get; init; }
     public readonly IMemoRepository _repository;
 
     public MemoCompleter()
     {
-        _key = "test1";
+        Key = "test1";
         _repository = DefaultMemoRepositoryProvider.GetRepository();
     }
 
-    public MemoCompleter(string key)
-    {
-        _key = key;
-        _repository = DefaultMemoRepositoryProvider.GetRepository();
-    }
-
-    public MemoCompleter(string key, IMemoRepository repository)
+    public MemoCompleter(IMemoRepository repository)
     {
         ArgumentNullException.ThrowIfNull(repository);
 
-        _key = key;
         _repository = repository;
     }
 
@@ -38,10 +33,61 @@ public class MemoCompleter : IArgumentCompleter
         CommandAst commandAst,
         IDictionary fakeBoundParameters)
     {
+        if (Key != null)
+        {
+            return CompleteArgumentUsingKey(Key);
+        }
+        if (KeyResolver != null)
+        {
+            return CompleteArgumentUsingKeyResolver(KeyResolver, fakeBoundParameters);
+        }
+
+        return Enumerable.Empty<CompletionResult>();
+    }
+
+    public IEnumerable<CompletionResult> CompleteArgumentUsingKey(string key)
+    {
         IEnumerable<string> values;
         try
         {
-            values = _repository.GetCollection(_key);
+            values = _repository.GetCollection(key);
+        }
+        catch (System.Exception)
+        {
+            return Enumerable.Empty<CompletionResult>();
+        }
+
+        return values
+        .Select(value =>
+        {
+            return new CompletionResult(value, value, CompletionResultType.ParameterValue, value);
+        });
+    }
+
+    public IEnumerable<CompletionResult> CompleteArgumentUsingKeyResolver(ScriptBlock keyResolver, IDictionary fakeBoundParameters)
+    {
+        var argumentsToResolver = new object[] { fakeBoundParameters };
+
+        Collection<PSObject>? customResults = null;
+        try
+        {
+            customResults = keyResolver.Invoke(argumentsToResolver);
+        }
+        catch (System.Exception)
+        {
+        }
+
+        if (customResults == null || customResults.Count == 0)
+        {
+            return Enumerable.Empty<CompletionResult>();
+        }
+
+        string key = customResults.First().ToString();
+
+        IEnumerable<string> values;
+        try
+        {
+            values = _repository.GetCollection(key);
         }
         catch (System.Exception)
         {
@@ -58,17 +104,27 @@ public class MemoCompleter : IArgumentCompleter
 
 public class MemoCompletionsAttribute
 {
-    private readonly string _key;
+    private readonly string? _key;
+    private readonly ScriptBlock? _keyResolver;
 
     public MemoCompletionsAttribute(string key)
     {
         _key = key;
     }
 
+    public MemoCompletionsAttribute(ScriptBlock keyResolver)
+    {
+        _keyResolver = keyResolver;
+    }
+
     IArgumentCompleter Create()
     {
         var repository = DefaultMemoRepositoryProvider.GetRepository();
 
-        return new MemoCompleter(_key, repository);
+        return new MemoCompleter(repository)
+        {
+            Key = _key,
+            KeyResolver = _keyResolver,
+        };
     }
 }

@@ -21,12 +21,27 @@ public class MemoCompleter : IArgumentCompleter
         _repository = DefaultMemoRepositoryProvider.GetRepository();
     }
 
-    public MemoCompleter(IMemoRepository repository)
+    public MemoCompleter(string key)
     {
-        ArgumentNullException.ThrowIfNull(repository);
+        Key = key;
 
-        _repository = repository;
+        _repository = DefaultMemoRepositoryProvider.GetRepository();
     }
+
+    public MemoCompleter(ScriptBlock keyResolver)
+    {
+        KeyResolver = keyResolver;
+
+        _repository = DefaultMemoRepositoryProvider.GetRepository();
+    }
+
+    // TODO: Implement when IArgumentCompleterFactory is available
+    // public MemoCompleter(IMemoRepository repository)
+    // {
+    //     ArgumentNullException.ThrowIfNull(repository);
+
+    //     _repository = repository;
+    // }
 
     public IEnumerable<CompletionResult> CompleteArgument(
         string commandName,
@@ -125,14 +140,15 @@ public class MemoCompletionsAttribute
         _keyResolver = keyResolver;
     }
 
-    IArgumentCompleter Create()
-    {
-        var repository = DefaultMemoRepositoryProvider.GetRepository();
+    // TODO: Implement when IArgumentCompleterFactory is available
+    // IArgumentCompleter Create()
+    // {
+    //     var repository = DefaultMemoRepositoryProvider.GetRepository();
 
-        return new MemoCompleter(repository)
-        {
-            Key = _key,
-            KeyResolver = _keyResolver,
-        };
-    }
+    //     return new MemoCompleter(repository)
+    //     {
+    //         Key = _key,
+    //         KeyResolver = _keyResolver,
+    //     };
+    // }
 }

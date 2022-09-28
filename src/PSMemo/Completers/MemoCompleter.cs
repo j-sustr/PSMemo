@@ -35,13 +35,13 @@ public class MemoCompleter : IArgumentCompleter
         CommandAst commandAst,
         IDictionary fakeBoundParameters)
     {
-        if (Key != null)
-        {
-            return CompleteArgumentUsingKey(Key);
-        }
         if (KeyResolver != null)
         {
             return CompleteArgumentUsingKeyResolver(KeyResolver, fakeBoundParameters);
+        }
+        if (Key != null)
+        {
+            return CompleteArgumentUsingKey(Key);
         }
 
         return Enumerable.Empty<CompletionResult>();

@@ -8,18 +8,26 @@ namespace PSMemo.Completers;
 
 public class MemoCompleter : IArgumentCompleter
 {
-    public readonly string _keyParameter;
+    public readonly string _key;
     public readonly IMemoRepository _repository;
 
     public MemoCompleter()
     {
-        _keyParameter = "Key";
+        _key = "test1";
         _repository = DefaultMemoRepositoryProvider.GetRepository();
     }
 
-    public MemoCompleter(string keyParameter, IMemoRepository repository)
+    public MemoCompleter(string key)
     {
-        _keyParameter = keyParameter;
+        _key = key;
+        _repository = DefaultMemoRepositoryProvider.GetRepository();
+    }
+
+    public MemoCompleter(string key, IMemoRepository repository)
+    {
+        ArgumentNullException.ThrowIfNull(repository);
+
+        _key = key;
         _repository = repository;
     }
 
@@ -30,16 +38,10 @@ public class MemoCompleter : IArgumentCompleter
         CommandAst commandAst,
         IDictionary fakeBoundParameters)
     {
-        string? key = fakeBoundParameters[_keyParameter] as string;
-        if (String.IsNullOrWhiteSpace(key))
-        {
-            return Enumerable.Empty<CompletionResult>();
-        }
-
         IEnumerable<string> values;
         try
         {
-            values = _repository.GetCollection(key as string);
+            values = _repository.GetCollection(_key);
         }
         catch (System.Exception)
         {
@@ -56,17 +58,17 @@ public class MemoCompleter : IArgumentCompleter
 
 public class MemoCompletionsAttribute
 {
-    private readonly string _keyParameter;
+    private readonly string _key;
 
-    public MemoCompletionsAttribute(string keyParameter)
+    public MemoCompletionsAttribute(string key)
     {
-        _keyParameter = keyParameter;
+        _key = key;
     }
 
     IArgumentCompleter Create()
     {
         var repository = DefaultMemoRepositoryProvider.GetRepository();
 
-        return new MemoCompleter(_keyParameter, repository);
+        return new MemoCompleter(_key, repository);
     }
 }

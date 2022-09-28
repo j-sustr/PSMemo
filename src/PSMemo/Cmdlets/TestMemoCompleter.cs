@@ -9,10 +9,11 @@ public class TestMemoCompleter : PSMemoCmdlet
 {
     [Parameter(Mandatory = true, Position = 0)]
     [ValidateNotNullOrEmpty]
+    [ArgumentCompleter(typeof(MemoCompleter))]
     public string Key { get; set; } = null!;
 
     [Parameter(Mandatory = true, Position = 1)]
-    [ArgumentCompleter(typeof(MemoCompleter))]
+    [ArgumentCompleter(typeof(MemoValueByDynamicKeyCompleter))]
     [ValidateNotNullOrEmpty]
     public string Value { get; set; } = null!;
 
